@@ -50,7 +50,6 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid User newUser, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
-
         User updatedUser = service.getUser(id).map(user -> {
             user.setName(newUser.getName());
             user.setSurname(newUser.getSurname());

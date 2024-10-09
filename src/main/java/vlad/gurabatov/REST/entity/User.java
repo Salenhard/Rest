@@ -32,7 +32,7 @@ public class User {
     @NotNull(message = "birthday can't be null")
     @Size(min = 3, max = 30, message = "birthday must be between 3 and 30 characters")
     private LocalDate birthday;
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Book> books;
     @Email(message = "Email must be valid")

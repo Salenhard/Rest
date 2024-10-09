@@ -2,7 +2,6 @@ package vlad.gurabatov.REST.service.Impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.entity.User;
 import vlad.gurabatov.REST.repository.UserRepository;
 import vlad.gurabatov.REST.service.BookService;
@@ -34,10 +33,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        User user = getUser(id).orElseThrow();
-        List<Book> books = user.getBooks();
-        if (!books.isEmpty())
-            books.forEach(book -> bookService.deleteBook(book.getId()));
         repository.deleteById(id);
     }
 
