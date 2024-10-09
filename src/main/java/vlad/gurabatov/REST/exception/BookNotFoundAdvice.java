@@ -1,6 +1,5 @@
 package vlad.gurabatov.REST.exception;
 
-import org.hibernate.query.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

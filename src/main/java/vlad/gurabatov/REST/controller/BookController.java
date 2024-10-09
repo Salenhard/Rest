@@ -5,14 +5,15 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.entity.model.BookModelAssembler;
 import vlad.gurabatov.REST.exception.BookNotFoundException;
 import vlad.gurabatov.REST.service.BookService;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.stream.Collector;
 
 @AllArgsConstructor
 @RestController
@@ -40,20 +41,29 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody Book newBook) {
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody @Valid Book newBook, BindingResult bindingResult) {
+        // валидация книги
+        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        // обновление книги
         Book updatedBook = service.getBook(id).map(book -> {
             book.setName(newBook.getName());
             book.setAuthor(newBook.getAuthor());
             book.setGenres(newBook.getGenres());
             return service.addBook(book);
         }).orElseThrow(() -> new BookNotFoundException(id));
+        // преобразование книги в модель
         EntityModel<Book> model = assembler.toModel(updatedBook);
+        // возвращение модели
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addBook(@RequestBody Book newBook) {
+    public ResponseEntity<?> addBook(@RequestBody @Valid Book newBook, BindingResult bindingResult) {
+        // валидация книги
+        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        // преобразование книги в модель
         EntityModel<Book> model = assembler.toModel(service.addBook(newBook));
+        // возвращение модели
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
 }

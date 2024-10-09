@@ -10,5 +10,4 @@ import vlad.gurabatov.REST.service.UserService;
 public class UserController {
     private final UserService service;
     private final UserModelAssembler assembler;
-
 }
