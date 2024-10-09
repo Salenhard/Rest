@@ -1,7 +1,6 @@
 package vlad.gurabatov.REST.controller;
 
 import lombok.AllArgsConstructor;
-import org.hibernate.bytecode.enhance.spi.EnhancementInfo;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -37,8 +36,7 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         EntityModel<User> model = assembler.toModel(service.addUser(user));
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
@@ -52,6 +50,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid User newUser, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+
         User updatedUser = service.getUser(id).map(user -> {
             user.setName(newUser.getName());
             user.setSurname(newUser.getSurname());
@@ -59,8 +58,9 @@ public class UserController {
             user.setEmail(newUser.getEmail());
             user.setBirthday(newUser.getBirthday());
             user.setBooks(newUser.getBooks());
-            return user;
+            return service.updateUser(user);
         }).orElseThrow(() -> new UserNotFoundException(id));
+
         EntityModel<User> model = assembler.toModel(updatedUser);
 
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);

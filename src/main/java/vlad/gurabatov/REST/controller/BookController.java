@@ -49,7 +49,7 @@ public class BookController {
             book.setName(newBook.getName());
             book.setAuthor(newBook.getAuthor());
             book.setGenres(newBook.getGenres());
-            return service.addBook(book);
+            return service.updateBook(book);
         }).orElseThrow(() -> new BookNotFoundException(id));
         // преобразование книги в модель
         EntityModel<Book> model = assembler.toModel(updatedBook);

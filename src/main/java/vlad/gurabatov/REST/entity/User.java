@@ -1,9 +1,7 @@
 package vlad.gurabatov.REST.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Data
-@AllArgsConstructor
+@Table(name = "users")
 @NoArgsConstructor
 public class User {
     @Id
@@ -24,23 +22,43 @@ public class User {
     private Long id;
     @NotNull(message = "Name can't be null")
     @Size(min = 3, max = 30, message = "Name must be between 3 and 30 characters")
-    String name;
+    private String name;
     @NotNull(message = "Surname can't be null")
     @Size(min = 3, max = 30, message = "Surname must be between 3 and 30 characters")
-    String surname;
+    private String surname;
     @NotNull(message = "Email can't be null")
     @Size(min = 3, max = 30, message = "Email must be between 3 and 30 characters")
-    String lastName;
+    private String lastName;
     @NotNull(message = "birthday can't be null")
     @Size(min = 3, max = 30, message = "birthday must be between 3 and 30 characters")
-    LocalDate birthday;
-    @OneToMany(mappedBy = "user")
-    List<Book> books;
+    private LocalDate birthday;
+    @OneToMany(mappedBy = "author")
+    @JsonIgnore
+    private List<Book> books;
     @Email(message = "Email must be valid")
-    String email;
+    private String email;
 
-    int getAge() {
+    public User(String name, String surname, String lastName, LocalDate birthday, String email) {
+        this.name = name;
+        this.surname = surname;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.email = email;
+    }
+
+    public int getAge() {
         return LocalDate.now().getYear() - birthday.getYear();
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "lastName='" + lastName + '\'' +
+                ", id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", birthday=" + birthday +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

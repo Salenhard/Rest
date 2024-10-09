@@ -8,9 +8,10 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
-@AllArgsConstructor
+@Table(name = "books")
 @NoArgsConstructor
 @Data
 public class Book {
@@ -28,5 +29,12 @@ public class Book {
     @ManyToOne
     private User author;
 
+    public Book(User author, List<Genre> genres, String description, String name) {
+        this.author = author;
+        this.genres = genres;
+        this.description = description;
+        this.name = name;
+    }
 
 }
+

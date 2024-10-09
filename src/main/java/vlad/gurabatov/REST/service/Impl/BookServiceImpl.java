@@ -1,6 +1,7 @@
 package vlad.gurabatov.REST.service.Impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.repository.BookRepository;
 import vlad.gurabatov.REST.service.BookService;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @AllArgsConstructor
+@Service
 public class BookServiceImpl implements BookService {
     private final BookRepository repository;
 
