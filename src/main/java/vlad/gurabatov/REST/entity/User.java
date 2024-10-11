@@ -2,12 +2,13 @@ package vlad.gurabatov.REST.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,17 +20,16 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
-    @NotBlank(message = "Name can't be null")
+    @NotBlank(message = "Name is mandatory")
     @Size(min = 3, max = 30, message = "Name must be between 3 and 30 characters")
     private String name;
-    @NotBlank(message = "Surname can't be null")
+    @NotBlank(message = "Surname is mandatory")
     @Size(min = 3, max = 30, message = "Surname must be between 3 and 30 characters")
     private String surname;
-    @NotBlank(message = "Email can't be null")
+    @NotBlank(message = "Email is mandatory")
     @Size(min = 3, max = 30, message = "Email must be between 3 and 30 characters")
     private String lastName;
-    @NotBlank(message = "birthday can't be null")
-    @Size(min = 3, max = 30, message = "birthday must be between 3 and 30 characters")
+    @NotNull(message = "birthday is mandatory")
     private LocalDate birthday;
     @OneToMany(mappedBy = "author", cascade = CascadeType.DETACH)
     @JsonIgnore

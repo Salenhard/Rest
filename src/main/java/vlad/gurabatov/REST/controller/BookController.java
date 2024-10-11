@@ -1,17 +1,17 @@
 package vlad.gurabatov.REST.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.entity.model.BookModelAssembler;
 import vlad.gurabatov.REST.exception.BookNotFoundException;
 import vlad.gurabatov.REST.service.BookService;
-import javax.validation.Valid;
+
 import java.util.List;
 
 @AllArgsConstructor
@@ -40,9 +40,9 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id, @RequestBody @Valid Book newBook, BindingResult bindingResult) {
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody  Book newBook) {
         // валидация книги
-        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        // if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         // обновление книги
         Book updatedBook = service.getBook(id).map(book -> {
             book.setName(newBook.getName());
@@ -57,9 +57,9 @@ public class BookController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addBook(@RequestBody @Valid Book newBook, BindingResult bindingResult) {
+    public ResponseEntity<?> addBook(@RequestBody @Valid Book newBook) {
         // валидация книги
-        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+        // if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         // преобразование книги в модель
         EntityModel<Book> model = assembler.toModel(service.addBook(newBook));
         // возвращение модели

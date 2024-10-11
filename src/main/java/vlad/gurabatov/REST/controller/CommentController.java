@@ -1,19 +1,17 @@
 package vlad.gurabatov.REST.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vlad.gurabatov.REST.entity.Comment;
 import vlad.gurabatov.REST.entity.model.CommentModelAssembler;
 import vlad.gurabatov.REST.exception.CommentNotFoundException;
 import vlad.gurabatov.REST.service.CommentService;
 
-import javax.validation.Valid;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -37,15 +35,14 @@ public class CommentController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addComment(@RequestBody @Valid Comment comment, BindingResult bindingResult) {
-        if (bindingResult.hasErrors())
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    public ResponseEntity<?> addComment(@Valid @RequestBody Comment comment) {
+        //if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         EntityModel<Comment> commentModel = assembler.toModel(service.addComment(comment));
         return ResponseEntity.created(commentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(commentModel);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateComment(@PathVariable Long id, @RequestBody Comment newComment) {
+    public ResponseEntity<?> updateComment(@PathVariable Long id, @Valid @RequestBody Comment newComment) {
         Comment updatedComment = service.getComment(id).map(comment ->
         {
             comment.setText(newComment.getText());

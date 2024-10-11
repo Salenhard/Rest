@@ -2,11 +2,11 @@ package vlad.gurabatov.REST.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -17,14 +17,14 @@ public class Book {
     @Id
     @GeneratedValue
     private Long id;
-    @NotNull(message = "Name can't be null")
+    @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
     private String name;
     private String description;
     @NotNull
     @Size(min = 1, max = 50, message = "List of genres must be between 1 and 50")
     private List<Genre> genres;
-    @NotNull(message = "Author can't be null")
+    @NotNull(message = "Author is mandatory")
     @ManyToOne
     private User author;
     @JsonIgnore

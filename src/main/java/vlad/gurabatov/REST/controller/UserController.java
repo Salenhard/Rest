@@ -1,17 +1,17 @@
 package vlad.gurabatov.REST.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vlad.gurabatov.REST.entity.User;
 import vlad.gurabatov.REST.entity.model.UserModelAssembler;
 import vlad.gurabatov.REST.exception.UserNotFoundException;
 import vlad.gurabatov.REST.service.UserService;
-import javax.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -34,8 +34,8 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
+        //if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         EntityModel<User> model = assembler.toModel(service.addUser(user));
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
@@ -47,8 +47,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid User newUser, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid User newUser) {
+        //if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         User updatedUser = service.getUser(id).map(user -> {
             user.setName(newUser.getName());
             user.setSurname(newUser.getSurname());
