@@ -1,5 +1,6 @@
 package vlad.gurabatov.REST.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,6 +27,9 @@ public class Book {
     @NotNull(message = "Author can't be null")
     @ManyToOne
     private User author;
+    @JsonIgnore
+    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
 
     public Book(User author, List<Genre> genres, String description, String name) {
         this.author = author;
@@ -34,5 +38,15 @@ public class Book {
         this.name = name;
     }
 
+    @Override
+    public String toString() {
+        return "Book{" +
+                "author=" + author +
+                ", genres=" + genres +
+                ", description='" + description + '\'' +
+                ", name='" + name + '\'' +
+                ", id=" + id +
+                '}';
+    }
 }
 

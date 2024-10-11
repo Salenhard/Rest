@@ -11,7 +11,6 @@ import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.entity.model.BookModelAssembler;
 import vlad.gurabatov.REST.exception.BookNotFoundException;
 import vlad.gurabatov.REST.service.BookService;
-
 import javax.validation.Valid;
 import java.util.List;
 

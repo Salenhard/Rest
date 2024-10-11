@@ -11,7 +11,6 @@ import vlad.gurabatov.REST.entity.User;
 import vlad.gurabatov.REST.entity.model.UserModelAssembler;
 import vlad.gurabatov.REST.exception.UserNotFoundException;
 import vlad.gurabatov.REST.service.UserService;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class UserController {
 
     @GetMapping("")
     public CollectionModel<EntityModel<User>> getAll() {
-        List<EntityModel<User>> model = service.allUsers().stream().map(assembler::toModel).toList();
+        List<EntityModel<User>> model = service.getAllUsers().stream().map(assembler::toModel).toList();
         return CollectionModel.of(model);
     }
 
@@ -35,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> createUser(@RequestBody @Valid User user, BindingResult bindingResult) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         EntityModel<User> model = assembler.toModel(service.addUser(user));
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);

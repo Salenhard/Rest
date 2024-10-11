@@ -4,23 +4,23 @@ import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
-import vlad.gurabatov.REST.controller.UserController;
-import vlad.gurabatov.REST.entity.User;
+import vlad.gurabatov.REST.controller.CommentController;
+import vlad.gurabatov.REST.entity.Comment;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
 @Component
-public class UserModelAssembler implements RepresentationModelAssembler<User, EntityModel<User>> {
+public class CommentModelAssembler implements RepresentationModelAssembler<Comment, EntityModel<Comment>> {
     @Override
-    public EntityModel<User> toModel(User entity) {
+    public EntityModel<Comment> toModel(Comment entity) {
         return EntityModel.of(entity,
-                linkTo(methodOn(UserController.class).getUserById(entity.getId())).withSelfRel(),
-                linkTo(methodOn(UserController.class).getAll()).withRel("all"));
+                linkTo(methodOn(CommentController.class).getCommentById(entity.getId())).withSelfRel(),
+                linkTo(methodOn(CommentController.class).getComments()).withRel("comments"));
     }
 
     @Override
-    public CollectionModel<EntityModel<User>> toCollectionModel(Iterable<? extends User> entities) {
+    public CollectionModel<EntityModel<Comment>> toCollectionModel(Iterable<? extends Comment> entities) {
         return RepresentationModelAssembler.super.toCollectionModel(entities);
     }
 }

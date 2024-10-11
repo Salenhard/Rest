@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> allUsers() {
+    public List<User> getAllUsers() {
         return repository.findAll();
     }
 
@@ -39,5 +39,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         return repository.save(user);
+    }
+
+    @Override
+    public List<User> getUsersByName(String name) {
+        return repository.findAll().stream()
+                .filter(user -> user.getName().equals(name)).toList();
     }
 }

@@ -38,4 +38,12 @@ public class BookServiceImpl implements BookService {
     public Book updateBook(Book book) {
         return repository.save(book);
     }
+
+    @Override
+    public List<Book> getBooksByName(String name) {
+        return repository.findAll().stream()
+                .filter(book -> book.getName().contains(name)).toList();
+    }
+
+
 }
