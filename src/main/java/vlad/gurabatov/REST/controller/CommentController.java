@@ -2,8 +2,6 @@ package vlad.gurabatov.REST.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -38,15 +36,13 @@ public class CommentController {
 
     @PostMapping("")
     public ResponseEntity<?> addComment(@Valid @RequestBody Comment comment) {
-        //if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         EntityModel<Comment> commentModel = assembler.toModel(service.addComment(comment));
         return ResponseEntity.created(commentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(commentModel);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateComment(@PathVariable Long id, @Valid @RequestBody Comment newComment) {
-        Comment updatedComment = service.getComment(id).map(comment ->
-        {
+        Comment updatedComment = service.getComment(id).map(comment -> {
             comment.setText(newComment.getText());
             return comment;
         }).orElseThrow(() -> new CommentNotFoundException(id));

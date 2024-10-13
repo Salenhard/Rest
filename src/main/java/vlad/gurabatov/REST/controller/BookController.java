@@ -39,8 +39,14 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/search")
+    public CollectionModel<EntityModel<Book>> getBooks(@RequestParam(required = false) String name) {
+        List<EntityModel<Book>> books = service.getAllBooks().stream().map(assembler::toModel).toList();
+        return CollectionModel.of(books);
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody  Book newBook) {
+    public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody Book newBook) {
         // обновление книги
         Book updatedBook = service.getBook(id).map(book -> {
             book.setName(newBook.getName());

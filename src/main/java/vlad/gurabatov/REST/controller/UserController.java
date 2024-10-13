@@ -2,8 +2,6 @@ package vlad.gurabatov.REST.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -35,7 +33,7 @@ public class UserController {
         return assembler.toModel(user);
     }
 
-    @GetMapping("/")
+    @GetMapping("/search")
     public CollectionModel<EntityModel<User>> getUserByName(@RequestParam String name) {
         List<EntityModel<User>> model = service.getUsersByName(name).stream().map(assembler::toModel).toList();
         return CollectionModel.of(model);
@@ -43,7 +41,6 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
-        //if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         EntityModel<User> model = assembler.toModel(service.addUser(user));
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
@@ -56,7 +53,6 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid User newUser) {
-        //if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         User updatedUser = service.getUser(id).map(user -> {
             user.setName(newUser.getName());
             user.setSurname(newUser.getSurname());
