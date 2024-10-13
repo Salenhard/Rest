@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(value = "users", key = "#user.id")
+    @CachePut(value = "users", key = "#id")
     public User addUser(User user) {
         return repository.save(user);
     }
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Cacheable(value = "users", key = "#name")
+    @Cacheable(value = "users", key = "#id")
     public List<User> getUsersByName(String name) {
         return repository.findAll().stream()
                 .filter(user -> user.getName().equals(name)).toList();
