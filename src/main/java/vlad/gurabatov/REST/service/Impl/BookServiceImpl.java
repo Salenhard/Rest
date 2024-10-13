@@ -1,6 +1,10 @@
 package vlad.gurabatov.REST.service.Impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.repository.BookRepository;
@@ -15,11 +19,13 @@ public class BookServiceImpl implements BookService {
     private final BookRepository repository;
 
     @Override
+    @CachePut(value = "books", key = "#id")
     public Book addBook(Book book) {
         return repository.save(book);
     }
 
     @Override
+    @Cacheable(value = "books", key = "#id")
     public Optional<Book> getBook(Long id) {
         return repository.findById(id);
     }
@@ -30,6 +36,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @CacheEvict(value = "books", key = "#id")
     public void deleteBook(Long id) {
         repository.deleteById(id);
     }

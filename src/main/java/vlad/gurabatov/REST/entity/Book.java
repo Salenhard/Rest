@@ -7,13 +7,14 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table(name = "books")
 @NoArgsConstructor
 @Data
-public class Book {
+public class Book implements Serializable {
     @Id
     @GeneratedValue
     private Long id;

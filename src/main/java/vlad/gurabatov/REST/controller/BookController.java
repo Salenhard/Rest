@@ -41,8 +41,6 @@ public class BookController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody  Book newBook) {
-        // валидация книги
-        // if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         // обновление книги
         Book updatedBook = service.getBook(id).map(book -> {
             book.setName(newBook.getName());
@@ -58,8 +56,6 @@ public class BookController {
 
     @PostMapping("")
     public ResponseEntity<?> addBook(@RequestBody @Valid Book newBook) {
-        // валидация книги
-        // if (bindingResult.hasErrors()) return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
         // преобразование книги в модель
         EntityModel<Book> model = assembler.toModel(service.addBook(newBook));
         // возвращение модели

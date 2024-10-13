@@ -1,6 +1,9 @@
 package vlad.gurabatov.REST.service.Impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import vlad.gurabatov.REST.entity.Comment;
 import vlad.gurabatov.REST.repository.CommentRepository;
@@ -16,12 +19,14 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository repository;
 
     @Override
+    @CachePut(value = "comments", key = "#id")
     public Comment addComment(Comment comment) {
         comment.setCreateDate(LocalDate.now());
         return repository.save(comment);
     }
 
     @Override
+    @Cacheable(value = "comments", key = "#id")
     public Optional<Comment> getComment(long id) {
         return repository.findById(id);
     }
@@ -32,6 +37,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @CacheEvict(value = "comments", key = "#id")
     public void deleteComment(long id) {
         repository.deleteById(id);
     }

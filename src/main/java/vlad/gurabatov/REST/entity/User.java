@@ -9,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 @Table(name = "users")
 @NoArgsConstructor
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue
     private Long id;

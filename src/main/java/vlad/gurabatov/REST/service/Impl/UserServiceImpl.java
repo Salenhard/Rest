@@ -1,6 +1,9 @@
 package vlad.gurabatov.REST.service.Impl;
 
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import vlad.gurabatov.REST.entity.User;
 import vlad.gurabatov.REST.repository.UserRepository;
@@ -17,6 +20,7 @@ public class UserServiceImpl implements UserService {
     private final BookService bookService;
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public Optional<User> getUser(Long id) {
         return repository.findById(id);
     }
@@ -27,11 +31,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CachePut(value = "users", key = "#user.id")
     public User addUser(User user) {
         return repository.save(user);
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#id")
     public void deleteUser(Long id) {
         repository.deleteById(id);
     }
@@ -42,6 +48,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#name")
     public List<User> getUsersByName(String name) {
         return repository.findAll().stream()
                 .filter(user -> user.getName().equals(name)).toList();

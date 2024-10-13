@@ -2,6 +2,8 @@ package vlad.gurabatov.REST.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.IanaLinkRelations;
@@ -31,6 +33,12 @@ public class UserController {
     public EntityModel<User> getUserById(@PathVariable Long id) {
         User user = service.getUser(id).orElseThrow(() -> new UserNotFoundException(id));
         return assembler.toModel(user);
+    }
+
+    @GetMapping("/")
+    public CollectionModel<EntityModel<User>> getUserByName(@RequestParam String name) {
+        List<EntityModel<User>> model = service.getUsersByName(name).stream().map(assembler::toModel).toList();
+        return CollectionModel.of(model);
     }
 
     @PostMapping("")
