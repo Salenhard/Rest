@@ -40,8 +40,8 @@ public class BookController {
     }
 
     @GetMapping("/search")
-    public CollectionModel<EntityModel<Book>> getBooks(@RequestParam(required = false) String name) {
-        List<EntityModel<Book>> books = service.getAllBooks().stream().map(assembler::toModel).toList();
+    public CollectionModel<EntityModel<Book>> getBooksByName(@RequestParam(required = false) String name) {
+        List<EntityModel<Book>> books = service.getBooksByName(name).stream().map(assembler::toModel).toList();
         return CollectionModel.of(books);
     }
 
