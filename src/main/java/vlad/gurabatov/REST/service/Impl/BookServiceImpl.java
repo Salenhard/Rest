@@ -19,7 +19,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository repository;
 
     @Override
-    @CachePut(value = "books", key = "#id")
+    @CachePut(value = "books", key = "#comment.id")
     public Book addBook(Book book) {
         return repository.save(book);
     }
@@ -36,7 +36,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @CacheEvict(value = "books", key = "#id")
+    @CacheEvict(value = "books", key = "#comment.id")
     public void deleteBook(Long id) {
         repository.deleteById(id);
     }

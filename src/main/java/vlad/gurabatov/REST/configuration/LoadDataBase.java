@@ -1,4 +1,4 @@
-package vlad.gurabatov.REST.Configuration;
+package vlad.gurabatov.REST.configuration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +23,10 @@ public class LoadDataBase {
     @Bean
     CommandLineRunner initDatabase(UserRepository userRepository, BookRepository bookRepository, CommentRepository commentRepository) {
         return args -> {
-            //userRepository.save(new User("Ivan", "Ivanov", "Ivanovich", LocalDate.now(), "test@gmail.com"));
-            //userRepository.save(new User("Alecsander", "Alecsandrov", "Alecsandrovich", LocalDate.now(), "test@gmail.com"));
-            //bookRepository.save(new Book(userRepository.findById(1L).get(), List.of(Genre.Comedy, Genre.Drama), "description", "name"));
-            //commentRepository.save(new Comment(1L, "texts", LocalDate.now(), bookRepository.findById(1L).get(), userRepository.findById(1L).get()));
+            userRepository.save(new User("Ivan", "Ivanov", "Ivanovich", LocalDate.now(), "test@gmail.com"));
+            userRepository.save(new User("Alecsander", "Alecsandrov", "Alecsandrovich", LocalDate.now(), "test@gmail.com"));
+            bookRepository.save(new Book(userRepository.findById(1L).get(), List.of(Genre.Comedy, Genre.Drama), "description", "name"));
+            commentRepository.save(new Comment(1L, "texts", LocalDate.now(), bookRepository.findById(1L).get(), userRepository.findById(1L).get()));
             userRepository.findAll().forEach(user -> log.info("Preloaded:" + user));
             bookRepository.findAll().forEach(book -> log.info("Preloaded:" + book));
             commentRepository.findAll().forEach(comment -> log.info("Preloaded:" + comment));

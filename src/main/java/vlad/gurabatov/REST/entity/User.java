@@ -22,13 +22,13 @@ public class User implements Serializable {
     @GeneratedValue
     private Long id;
     @NotBlank(message = "Name is mandatory")
-    @Size(min = 3, max = 30, message = "Name must be between 3 and 30 characters")
+    @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")
     private String name;
     @NotBlank(message = "Surname is mandatory")
-    @Size(min = 3, max = 30, message = "Surname must be between 3 and 30 characters")
+    @Size(min = 2, max = 30, message = "Surname must be between 2 and 30 characters")
     private String surname;
     @NotBlank(message = "Email is mandatory")
-    @Size(min = 3, max = 30, message = "Email must be between 3 and 30 characters")
+    @Size(min = 2, max = 30, message = "Email must be between 2 and 30 characters")
     private String lastName;
     @NotNull(message = "birthday is mandatory")
     private LocalDate birthday;

@@ -31,13 +31,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @CachePut(value = "users", key = "#id")
+    @CachePut(value = "users", key = "#user.id")
     public User addUser(User user) {
         return repository.save(user);
     }
 
     @Override
-    @CacheEvict(value = "users", key = "#id")
+    @CacheEvict(value = "users", key = "#user.id")
     public void deleteUser(Long id) {
         repository.deleteById(id);
     }

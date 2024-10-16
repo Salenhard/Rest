@@ -19,7 +19,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository repository;
 
     @Override
-    @CachePut(value = "comments", key = "#id")
+    @CachePut(value = "comments", key = "#comment.id")
     public Comment addComment(Comment comment) {
         comment.setCreateDate(LocalDate.now());
         return repository.save(comment);
@@ -37,7 +37,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    @CacheEvict(value = "comments", key = "#id")
+    @CacheEvict(value = "comments", key = "#comment.id")
     public void deleteComment(long id) {
         repository.deleteById(id);
     }
