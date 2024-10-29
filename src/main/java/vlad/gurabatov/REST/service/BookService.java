@@ -13,19 +13,19 @@ import java.util.Optional;
 public interface BookService {
 
     @CachePut(value = "books", key = "#comment.id")
-    Book addBook(Book book,long userId);
+    Book add(Book book, long userId);
 
     @Cacheable(value = "books", key = "#id")
-    Optional<Book> getBook(Long id);
+    Optional<Book> get(Long id);
 
     void increaseViews(Book book);
 
-    List<Book> getAllBooks();
+    List<Book> getAll();
 
     @CacheEvict(value = "books", key = "#comment.id")
-    void deleteBook(Long id);
+    void delete(Long id);
 
-    Book updateBook(Book book, long userId);
+    Book update(Book book, long userId);
 
-    List<Book> getBooksByName(String name);
+    List<Book> getAllByName(String name);
 }

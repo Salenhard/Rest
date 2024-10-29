@@ -22,19 +22,19 @@ public class BookServiceImplTest {
     private BookServiceImpl bookService;
 
     @Test
-    public void getAllBooks() {
+    public void getAll() {
         List<Book> books = getBooks();
         Mockito.when(bookRepository.findAll()).thenReturn(books);
-        List<Book> result = bookService.getAllBooks();
+        List<Book> result = bookService.getAll();
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.size());
     }
 
     @Test
-    public void getBooksByName() {
+    public void getAllByName() {
         List<Book> books = getBooks();
         Mockito.when(bookRepository.findAll()).thenReturn(getBooks());
-        List<Book> result = bookService.getBooksByName("First Book");
+        List<Book> result = bookService.getAllByName("First Book");
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.size());
     }

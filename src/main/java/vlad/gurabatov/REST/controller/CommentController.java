@@ -23,26 +23,26 @@ public class CommentController {
 
     @GetMapping("")
     public CollectionModel<EntityModel<Comment>> getComments() {
-        List<EntityModel<Comment>> comments = service.getAllComments().stream()
+        List<EntityModel<Comment>> comments = service.getAll().stream()
                 .map(assembler::toModel).toList();
         return CollectionModel.of(comments);
     }
 
     @GetMapping("/{id}")
     public EntityModel<Comment> getCommentById(@PathVariable Long id) {
-        Comment comment = service.getComment(id).orElseThrow(() -> new CommentNotFoundException(id));
+        Comment comment = service.get(id).orElseThrow(() -> new CommentNotFoundException(id));
         return assembler.toModel(comment);
     }
 
     @PostMapping("")
     public ResponseEntity<?> addComment(@Valid @RequestBody Comment comment, @RequestParam long bookId) {
-        EntityModel<Comment> commentModel = assembler.toModel(service.addComment(comment, 1, bookId));
+        EntityModel<Comment> commentModel = assembler.toModel(service.add(comment, 1, bookId));
         return ResponseEntity.created(commentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(commentModel);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateComment(@PathVariable Long id, @Valid @RequestBody Comment newComment) {
-        Comment updatedComment = service.getComment(id).map(comment -> {
+        Comment updatedComment = service.get(id).map(comment -> {
             comment.setText(newComment.getText());
             return comment;
         }).orElseThrow(() -> new CommentNotFoundException(id));
@@ -52,7 +52,7 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable Long id) {
-        service.deleteComment(id, 1);
+        service.delete(id, 1);
         return ResponseEntity.noContent().build();
     }
 

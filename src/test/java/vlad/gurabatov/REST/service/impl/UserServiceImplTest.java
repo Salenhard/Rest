@@ -22,18 +22,18 @@ public class UserServiceImplTest {
     UserServiceImpl userService;
 
     @Test
-    public void getGetAllUsers() {
+    public void getAll() {
         Mockito.when(userRepository.findAll()).thenReturn(getUsers());
-        List<User> users = userService.getAllUsers();
+        List<User> users = userService.getAll();
         Assertions.assertNotNull(users);
         Assertions.assertEquals(getUsers(), users);
     }
 
     @Test
-    public void getUsersByName() {
+    public void getAllByName() {
         String name = "Vlad";
         Mockito.when(userRepository.findAll()).thenReturn(getUsers());
-        List<User> users = userService.getUsersByName(name);
+        List<User> users = userService.getAllByName(name);
         Assertions.assertNotNull(users);
         Assertions.assertEquals(1, users.size());
     }

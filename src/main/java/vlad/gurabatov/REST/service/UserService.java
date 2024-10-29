@@ -12,17 +12,17 @@ import java.util.Optional;
 @Service
 public interface UserService {
     @Cacheable(value = "users", key = "#id")
-    Optional<User> getUser(Long id);
+    Optional<User> get(Long id);
 
-    List<User> getAllUsers();
+    List<User> getAll();
 
     @CachePut(value = "users", key = "#user.id")
-    User addUser(User user);
+    User add(User user);
 
     @CacheEvict(value = "users", key = "#user.id")
-    void deleteUser(Long id);
+    void delete(Long id);
 
-    User updateUser(User user);
+    User update(User user);
 
-    List<User> getUsersByName(String name);
+    List<User> getAllByName(String name);
 }

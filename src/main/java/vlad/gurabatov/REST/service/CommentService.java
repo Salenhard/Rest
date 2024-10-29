@@ -12,15 +12,15 @@ import java.util.Optional;
 @Service
 public interface CommentService {
     @CachePut(value = "comments", key = "#comment.id")
-    public Comment addComment(Comment comment, long userId, long bookId);
+    public Comment add(Comment comment, long userId, long bookId);
 
     @Cacheable(value = "comments", key = "#id")
-    public Optional<Comment> getComment(long id);
+    public Optional<Comment> get(long id);
 
-    public List<Comment> getAllComments();
+    public List<Comment> getAll();
 
     @CacheEvict(value = "comments", key = "#comment.id")
-    public void deleteComment(long id, long userId);
+    public void delete(long id, long userId);
 
-    public Comment updateComment(Comment comment, long userId);
+    public Comment update(Comment comment, long userId);
 }

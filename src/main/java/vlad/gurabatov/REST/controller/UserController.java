@@ -35,20 +35,20 @@ public class UserController {
 
     @GetMapping("")
     public CollectionModel<EntityModel<User>> getAll() {
-        List<EntityModel<User>> model = service.getAllUsers().stream().map(assembler::toModel).toList();
+        List<EntityModel<User>> model = service.getAll().stream().map(assembler::toModel).toList();
         return CollectionModel.of(model);
     }
 
     @GetMapping("/{id}")
     public EntityModel<User> getUserById(@PathVariable Long id) {
-        User user = service.getUser(id).orElseThrow(() -> new UserNotFoundException(id));
+        User user = service.get(id).orElseThrow(() -> new UserNotFoundException(id));
         producer.sendMessage(user + " get user by id was called");
         return assembler.toModel(user);
     }
 
     @GetMapping("/search")
     public CollectionModel<EntityModel<User>> getUserByName(@RequestParam String name) {
-        List<EntityModel<User>> model = service.getUsersByName(name).stream()
+        List<EntityModel<User>> model = service.getAllByName(name).stream()
                 .map(assembler::toModel).toList();
         return CollectionModel.of(model);
     }
@@ -70,26 +70,26 @@ public class UserController {
 
     @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
-        EntityModel<User> model = assembler.toModel(service.addUser(user));
+        EntityModel<User> model = assembler.toModel(service.add(user));
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        service.deleteUser(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody @Valid User newUser) {
-        User updatedUser = service.getUser(id).map(user -> {
+        User updatedUser = service.get(id).map(user -> {
             user.setName(newUser.getName());
             user.setSurname(newUser.getSurname());
             user.setLastName(user.getLastName());
             user.setEmail(newUser.getEmail());
             user.setBirthday(newUser.getBirthday());
             user.setBooks(newUser.getBooks());
-            return service.updateUser(user);
+            return service.update(user);
         }).orElseThrow(() -> new UserNotFoundException(id));
 
         EntityModel<User> model = assembler.toModel(updatedUser);

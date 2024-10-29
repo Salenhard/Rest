@@ -15,7 +15,7 @@ public class ScheduledTasksService {
 
     @Scheduled(fixedRate = 1000)
     public void increaseViews() {
-        bookService.getAllBooks().forEach(bookService::increaseViews);
+        bookService.getAll().forEach(bookService::increaseViews);
         log.info("Increasing views...");
     }
 }

@@ -23,36 +23,37 @@ public class BookController {
 
     @GetMapping("/{id}")
     public EntityModel<Book> getBook(@PathVariable Long id) {
-        Book book = service.getBook(id).orElseThrow(() -> new BookNotFoundException(id));
+        Book book = service.get(id).orElseThrow(() -> new BookNotFoundException(id));
+        service.increaseViews(book);
         return assembler.toModel(book);
     }
 
     @GetMapping("")
     public CollectionModel<EntityModel<Book>> getBooks() {
-        List<EntityModel<Book>> books = service.getAllBooks().stream().map(assembler::toModel).toList();
+        List<EntityModel<Book>> books = service.getAll().stream().map(assembler::toModel).toList();
         return CollectionModel.of(books);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBook(@PathVariable Long id) {
-        service.deleteBook(id);
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/search")
     public CollectionModel<EntityModel<Book>> getBooksByName(@RequestParam(required = false) String name) {
-        List<EntityModel<Book>> books = service.getBooksByName(name).stream().map(assembler::toModel).toList();
+        List<EntityModel<Book>> books = service.getAllByName(name).stream().map(assembler::toModel).toList();
         return CollectionModel.of(books);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBook(@PathVariable Long id, @Valid @RequestBody Book newBook) {
         // обновление книги
-        Book updatedBook = service.getBook(id).map(book -> {
+        Book updatedBook = service.get(id).map(book -> {
             book.setName(newBook.getName());
             book.setAuthor(newBook.getAuthor());
             book.setGenres(newBook.getGenres());
-            return service.updateBook(book, 1);
+            return service.update(book, 1);
         }).orElseThrow(() -> new BookNotFoundException(id));
         // преобразование книги в модель
         EntityModel<Book> model = assembler.toModel(updatedBook);
@@ -63,7 +64,7 @@ public class BookController {
     @PostMapping("")
     public ResponseEntity<?> addBook(@RequestBody @Valid Book newBook) {
         // преобразование книги в модель
-        EntityModel<Book> model = assembler.toModel(service.addBook(newBook, 1));
+        EntityModel<Book> model = assembler.toModel(service.add(newBook, 1));
         // возвращение модели
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }
