@@ -1,10 +1,8 @@
 package vlad.gurabatov.REST.service.Impl;
 
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.repository.BookRepository;
@@ -17,38 +15,41 @@ import java.util.Optional;
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository repository;
+    private static final Logger log = LoggerFactory.getLogger(BookServiceImpl.class);
 
     @Override
-    @CachePut(value = "books", key = "#comment.id")
-    public Book addBook(Book book) {
-        return repository.save(book);
+    public Book addBook(Book book, long userId) {
+        return repository.save(book, userId);
     }
 
     @Override
-    @Cacheable(value = "books", key = "#id")
     public Optional<Book> getBook(Long id) {
-        return repository.findById(id);
+        return repository.get(id);
+    }
+
+    @Override
+    public void increaseViews(Book book) {
+        repository.increaseViews(book);
     }
 
     @Override
     public List<Book> getAllBooks() {
-        return repository.findAll();
+        return repository.getAll();
     }
 
     @Override
-    @CacheEvict(value = "books", key = "#comment.id")
     public void deleteBook(Long id) {
-        repository.deleteById(id);
+        repository.delete(id);
     }
 
     @Override
-    public Book updateBook(Book book) {
-        return repository.save(book);
+    public Book updateBook(Book book, long userId) {
+        return repository.save(book, userId);
     }
 
     @Override
     public List<Book> getBooksByName(String name) {
-        return repository.findAll().stream()
+        return repository.getAll().stream()
                 .filter(book -> book.getName().contains(name)).toList();
     }
 

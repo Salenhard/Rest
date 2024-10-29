@@ -52,7 +52,7 @@ public class BookController {
             book.setName(newBook.getName());
             book.setAuthor(newBook.getAuthor());
             book.setGenres(newBook.getGenres());
-            return service.updateBook(book);
+            return service.updateBook(book, 1);
         }).orElseThrow(() -> new BookNotFoundException(id));
         // преобразование книги в модель
         EntityModel<Book> model = assembler.toModel(updatedBook);
@@ -63,7 +63,7 @@ public class BookController {
     @PostMapping("")
     public ResponseEntity<?> addBook(@RequestBody @Valid Book newBook) {
         // преобразование книги в модель
-        EntityModel<Book> model = assembler.toModel(service.addBook(newBook));
+        EntityModel<Book> model = assembler.toModel(service.addBook(newBook, 1));
         // возвращение модели
         return ResponseEntity.created(model.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(model);
     }

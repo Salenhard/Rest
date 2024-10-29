@@ -1,5 +1,6 @@
 package vlad.gurabatov.REST.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,10 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Data
@@ -14,7 +19,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Comment {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue
     private long id;
@@ -24,8 +29,9 @@ public class Comment {
     private LocalDate createDate;
     @ManyToOne
     @NotNull(message = "Book is mandatory")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;
     @ManyToOne
-    @NotNull(message = "User is mandatory")
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     private User author;
 }

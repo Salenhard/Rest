@@ -25,11 +25,22 @@ public class LoadDataBase {
         return args -> {
             userRepository.save(new User("Ivan", "Ivanov", "Ivanovich", LocalDate.now(), "test@gmail.com"));
             userRepository.save(new User("Alecsander", "Alecsandrov", "Alecsandrovich", LocalDate.now(), "test@gmail.com"));
-            bookRepository.save(new Book(userRepository.findById(1L).get(), List.of(Genre.Comedy, Genre.Drama), "description", "name"));
-            commentRepository.save(new Comment(1L, "texts", LocalDate.now(), bookRepository.findById(1L).get(), userRepository.findById(1L).get()));
-            userRepository.findAll().forEach(user -> log.info("Preloaded:" + user));
-            bookRepository.findAll().forEach(book -> log.info("Preloaded:" + book));
-            commentRepository.findAll().forEach(comment -> log.info("Preloaded:" + comment));
+            Book book1 = new Book();
+            book1.setName("name");
+            book1.setDescription("description");
+            book1.setGenres(List.of(Genre.Drama, Genre.Horror));
+            Book book2 = new Book();
+            book2.setName("name");
+            book2.setDescription("description");
+            book2.setGenres(List.of(Genre.Horror, Genre.Drama));
+            bookRepository.save(book1, 1);
+            bookRepository.save(book2, 2);
+            Comment comment = new Comment();
+            comment.setText("test text for comment");
+            commentRepository.save(comment, 1, 1);
+            userRepository.getAll().forEach(user -> log.info("Preloaded:" + user));
+            bookRepository.getAll().forEach(book -> log.info("Preloaded:" + book));
+            commentRepository.getAll().forEach(com -> log.info("Preloaded:" + com));
         };
     }
 }

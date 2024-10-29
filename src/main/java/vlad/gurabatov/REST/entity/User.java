@@ -32,13 +32,13 @@ public class User implements Serializable {
     private String lastName;
     @NotNull(message = "birthday is mandatory")
     private LocalDate birthday;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Book> books;
     @Email(message = "Email must be valid")
     private String email;
     @JsonIgnore
-    @OneToMany(mappedBy = "author", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     public User(String name, String surname, String lastName, LocalDate birthday, String email) {

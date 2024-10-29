@@ -35,8 +35,8 @@ public class CommentController {
     }
 
     @PostMapping("")
-    public ResponseEntity<?> addComment(@Valid @RequestBody Comment comment) {
-        EntityModel<Comment> commentModel = assembler.toModel(service.addComment(comment));
+    public ResponseEntity<?> addComment(@Valid @RequestBody Comment comment, @RequestParam long bookId) {
+        EntityModel<Comment> commentModel = assembler.toModel(service.addComment(comment, 1, bookId));
         return ResponseEntity.created(commentModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(commentModel);
     }
 
@@ -52,7 +52,7 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable Long id) {
-        service.deleteComment(id);
+        service.deleteComment(id, 1);
         return ResponseEntity.noContent().build();
     }
 

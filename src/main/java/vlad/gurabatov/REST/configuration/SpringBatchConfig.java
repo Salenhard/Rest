@@ -12,19 +12,18 @@ import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.transaction.PlatformTransactionManager;
 import vlad.gurabatov.REST.entity.DTO.UserDTO;
 import vlad.gurabatov.REST.entity.User;
-import vlad.gurabatov.REST.repository.UserRepository;
+import vlad.gurabatov.REST.repository.datajpa.CrudUserRepository;
 
 @SpringBootConfiguration
 @AllArgsConstructor
 public class SpringBatchConfig {
-    private final UserRepository userRepository;
+    private final CrudUserRepository userRepository;
     private final PlatformTransactionManager transactionManager;
     private final JobRepository jobRepository;
 

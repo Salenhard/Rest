@@ -29,8 +29,9 @@ public class Book implements Serializable {
     @ManyToOne
     private User author;
     @JsonIgnore
-    @OneToMany(mappedBy = "book", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
+    private Long views = 0L;
 
     public Book(User author, List<Genre> genres, String description, String name) {
         this.author = author;

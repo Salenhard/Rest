@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import vlad.gurabatov.REST.entity.Book;
-import vlad.gurabatov.REST.repository.BookRepository;
+import vlad.gurabatov.REST.repository.datajpa.CrudBookRepository;
 import vlad.gurabatov.REST.service.Impl.BookServiceImpl;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.List;
 @RunWith(MockitoJUnitRunner.class)
 public class BookServiceImplTest {
     @Mock
-    private BookRepository bookRepository;
+    private CrudBookRepository bookRepository;
 
     @InjectMocks
     private BookServiceImpl bookService;

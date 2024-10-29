@@ -8,7 +8,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import vlad.gurabatov.REST.entity.User;
-import vlad.gurabatov.REST.repository.UserRepository;
+import vlad.gurabatov.REST.repository.datajpa.CrudUserRepository;
 import vlad.gurabatov.REST.service.Impl.UserServiceImpl;
 
 import java.time.LocalDate;
@@ -17,7 +17,7 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class UserServiceImplTest {
     @Mock
-    UserRepository userRepository;
+    CrudUserRepository userRepository;
     @InjectMocks
     UserServiceImpl userService;
 

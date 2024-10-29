@@ -1,9 +1,6 @@
 package vlad.gurabatov.REST.service.Impl;
 
 import lombok.AllArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import vlad.gurabatov.REST.entity.Comment;
 import vlad.gurabatov.REST.repository.CommentRepository;
@@ -19,31 +16,28 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository repository;
 
     @Override
-    @CachePut(value = "comments", key = "#comment.id")
-    public Comment addComment(Comment comment) {
+    public Comment addComment(Comment comment, long userId, long bookId) {
         comment.setCreateDate(LocalDate.now());
-        return repository.save(comment);
+        return repository.save(comment, userId, bookId);
     }
 
     @Override
-    @Cacheable(value = "comments", key = "#id")
     public Optional<Comment> getComment(long id) {
-        return repository.findById(id);
+        return repository.get(id);
     }
 
     @Override
     public List<Comment> getAllComments() {
-        return repository.findAll();
+        return repository.getAll();
     }
 
     @Override
-    @CacheEvict(value = "comments", key = "#comment.id")
-    public void deleteComment(long id) {
-        repository.deleteById(id);
+    public void deleteComment(long id, long userId) {
+        repository.delete(id, userId);
     }
 
     @Override
-    public Comment updateComment(Comment comment) {
-        return repository.save(comment);
+    public Comment updateComment(Comment comment, long userId) {
+        return repository.update(comment, userId);
     }
 }

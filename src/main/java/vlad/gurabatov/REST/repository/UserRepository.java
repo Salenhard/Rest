@@ -1,13 +1,18 @@
 package vlad.gurabatov.REST.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 import vlad.gurabatov.REST.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository {
+    Optional<User> get(long id);
 
-    List<User> findByName(String name);
+    List<User> getAll();
+
+    User save(User user);
+
+    void delete(long id);
+
+    User update(User user);
 }
