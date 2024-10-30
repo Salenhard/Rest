@@ -24,10 +24,12 @@ public class Book implements Serializable {
     private String description;
     @NotNull
     @Size(min = 1, max = 50, message = "List of genres must be between 1 and 50")
+    @CollectionTable(name = "books_genres", joinColumns = @JoinColumn(name = "book_id"))
     @Enumerated(EnumType.STRING)
     private List<Genre> genres;
     @NotNull(message = "Author is mandatory")
     @ManyToOne
+    @JoinColumn(name = "author_id", nullable = false)
     private User author;
     @JsonIgnore
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

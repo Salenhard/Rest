@@ -1,4 +1,5 @@
 package vlad.gurabatov.REST.repository.jdbc;
+
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,12 +11,8 @@ import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.repository.BookRepository;
 
 import javax.sql.DataSource;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Repository
 @Profile("jdbc")
@@ -40,13 +37,13 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> get(long id) {
-        List<Book> books = jdbcTemplate.query("SELECT * FROM books WHERE id = ?", ROW_MAPPER, id);
+        List<Book> books = jdbcTemplate.query("SELECT * FROM books INNER JOIN users ON books.author_id = users.id INNER JOIN books_genres ON books.id = books_genres.book_id WHERE books.id = ?", ROW_MAPPER, id);
         return Optional.of(books.getFirst());
     }
 
     @Override
     public List<Book> getAll() {
-        return jdbcTemplate.query("SELECT * FROM books", ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM books INNER JOIN users ON books.author_id = users.id INNER JOIN books_genres ON books.id = books_genres.book_id", ROW_MAPPER);
     }
 
     @Override
@@ -54,23 +51,22 @@ public class JdbcBookRepository implements BookRepository {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", book.getId())
                 .addValue("name", book.getName())
-                .addValue("author", userId)
+                .addValue("author_id", userId)
                 .addValue("description", book.getDescription())
-                .addValue("genres", book.getGenres().stream()
-                        .map(String::valueOf)
-                        .collect(Collectors.joining(",")));
+                .addValue("genres", book.getGenres());
         if (book.getId() == null) {
-            Number id = bookInsert.executeAndReturnKey(map);
-            book.setId(id.longValue());
+            long id = bookInsert.executeAndReturnKey(map).longValue();
+            book.getGenres().forEach(genre -> jdbcTemplate.update("INSERT INTO books_genres (book_id, genre) VALUES (?, ?)", id, genre.name()));
+            book.setId(id);
             return book;
-        }
-        else if(namedParameterJdbcTemplate.update("UPDATE books SET name = ?," +
-                " author = ?," +
+        } else if (namedParameterJdbcTemplate.update("UPDATE books SET name = ?," +
+                " author_id = ?," +
                 " description = ?," +
-                " genres = ? " +
                 "WHERE id = ?", map) == 0) {
             return null;
         }
+        jdbcTemplate.update("DELETE FROM books_geners WHERE book_id = ?", book.getId());
+        book.getGenres().forEach(genre -> jdbcTemplate.update("INSERT INTO books_genres (book_id, genre) VALUES (?, ?)", book.getId(), genre.name()));
         return book;
     }
 

@@ -1,6 +1,4 @@
 package vlad.gurabatov.REST.entity;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,12 +24,14 @@ public class Comment implements Serializable {
     @NotBlank(message = "Comment is mandatory")
     @Size(min = 5, max = 500, message = "Comment must be between 5 and 500 characters")
     private String text;
-    private LocalDate createDate;
+    private LocalDate createDate = LocalDate.now();
     @ManyToOne
     @NotNull(message = "Book is mandatory")
+    @JoinColumn(name = "book_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private User author;
 }

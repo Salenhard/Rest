@@ -37,21 +37,21 @@ public class JdbcCommentRepository implements CommentRepository {
 
     @Override
     public Optional<Comment> get(long id) {
-        List<Comment> comments = jdbcTemplate.query("SELECT * FROM comments WHERE id = ?", ROW_MAPPER, id);
+        List<Comment> comments = jdbcTemplate.query("SELECT * FROM comments INNER JOIN users ON comments.author_id = users.id INNER JOIN books ON comments.book_id = books.id WHERE comments.id = ?", ROW_MAPPER, id);
         return Optional.of(comments.getFirst());
     }
 
     @Override
     public List<Comment> getAll() {
-        return jdbcTemplate.query("SELECT * FROM comments", ROW_MAPPER);
+        return jdbcTemplate.query("SELECT * FROM comments INNER JOIN users ON comments.author_id = users.id INNER JOIN books ON comments.book_id = books.id", ROW_MAPPER);
     }
 
     @Override
     public Comment save(Comment comment, long userId, long bookId) {
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", comment.getId())
-                .addValue("author", userId)
-                .addValue("book", bookId)
+                .addValue("author_id", userId)
+                .addValue("book_id", bookId)
                 .addValue("text", comment.getText())
                 .addValue("createDate", comment.getCreateDate());
         if (comment.getId() == 0) {

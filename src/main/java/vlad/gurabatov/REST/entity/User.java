@@ -36,6 +36,7 @@ public class User implements Serializable {
     @JsonIgnore
     private List<Book> books;
     @Email(message = "Email must be valid")
+    @NotBlank(message = "Email is mandatory")
     private String email;
     @JsonIgnore
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
