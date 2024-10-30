@@ -2,6 +2,7 @@ package vlad.gurabatov.REST.repository.datajpa;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import vlad.gurabatov.REST.entity.User;
 import vlad.gurabatov.REST.repository.UserRepository;
@@ -10,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 @AllArgsConstructor
 @Repository
-@Primary
+@Profile("jpa")
 public class DataJpaUserRepository implements UserRepository {
     private final CrudUserRepository crudUserRepository;
     @Override

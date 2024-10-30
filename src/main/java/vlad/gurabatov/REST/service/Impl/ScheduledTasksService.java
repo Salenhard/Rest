@@ -13,9 +13,9 @@ public class ScheduledTasksService {
     private final BookService bookService;
     private final static Logger log = LoggerFactory.getLogger(ScheduledTasksService.class);
 
-    @Scheduled(fixedRate = 1000)
-    public void increaseViews() {
-        bookService.getAll().forEach(bookService::increaseViews);
-        log.info("Increasing views...");
-    }
+//    @Scheduled(fixedRate = 1000)
+//    public void increaseViews() {
+//        bookService.getAll().forEach(bookService::increaseViews);
+//        log.info("Increasing views...");
+//    }
 }

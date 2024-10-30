@@ -16,7 +16,7 @@ import java.util.List;
 @Data
 public class Book implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @NotNull(message = "Name is mandatory")
     @Size(min = 1, max = 50, message = "Name must be between 1 and 50 characters")
@@ -24,6 +24,7 @@ public class Book implements Serializable {
     private String description;
     @NotNull
     @Size(min = 1, max = 50, message = "List of genres must be between 1 and 50")
+    @Enumerated(EnumType.STRING)
     private List<Genre> genres;
     @NotNull(message = "Author is mandatory")
     @ManyToOne

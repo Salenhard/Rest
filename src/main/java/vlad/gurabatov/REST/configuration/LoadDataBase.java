@@ -38,9 +38,9 @@ public class LoadDataBase {
             Comment comment = new Comment();
             comment.setText("test text for comment");
             commentRepository.save(comment, 1, 1);
-            userRepository.getAll().forEach(user -> log.info("Preloaded:" + user));
-            bookRepository.getAll().forEach(book -> log.info("Preloaded:" + book));
-            commentRepository.getAll().forEach(com -> log.info("Preloaded:" + com));
+            //userRepository.getAll().forEach(user -> log.info("Preloaded:" + user));
+            //bookRepository.getAll().forEach(book -> log.info("Preloaded:" + book));
+            //commentRepository.getAll().forEach(com -> log.info("Preloaded:" + com));
         };
     }
 }

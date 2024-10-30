@@ -2,6 +2,7 @@ package vlad.gurabatov.REST.repository.datajpa;
 
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.entity.Comment;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 @AllArgsConstructor
 @Repository
-@Primary
+@Profile("jpa")
 public class DataJpaCommentRepository implements CommentRepository {
     private final CrudCommentRepository crudCommentRepository;
     private final CrudUserRepository crudUserRepository;

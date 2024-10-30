@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
     @NotBlank(message = "Name is mandatory")
     @Size(min = 2, max = 30, message = "Name must be between 2 and 30 characters")

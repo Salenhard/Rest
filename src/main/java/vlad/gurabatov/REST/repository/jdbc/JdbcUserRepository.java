@@ -1,5 +1,6 @@
 package vlad.gurabatov.REST.repository.jdbc;
-import org.springframework.context.annotation.Primary;
+
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -9,11 +10,16 @@ import org.springframework.stereotype.Repository;
 import vlad.gurabatov.REST.entity.User;
 import vlad.gurabatov.REST.repository.UserRepository;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
+@Profile("jdbc")
 public class JdbcUserRepository implements UserRepository {
     private static final BeanPropertyRowMapper<User> ROW_MAPPER = new BeanPropertyRowMapper<>(User.class);
+
+    private final DataSource dataSource;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -21,10 +27,11 @@ public class JdbcUserRepository implements UserRepository {
 
     private final SimpleJdbcInsert insertUser;
 
-    public JdbcUserRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, SimpleJdbcInsert insertUser) {
+    public JdbcUserRepository(DataSource dataSource, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.dataSource = dataSource;
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.insertUser = insertUser
+        this.insertUser = new SimpleJdbcInsert(dataSource)
                 .withTableName("users")
                 .usingGeneratedKeyColumns("id");
     }
@@ -49,12 +56,11 @@ public class JdbcUserRepository implements UserRepository {
                 .addValue("surname", user.getSurname())
                 .addValue("birthday", user.getBirthday())
                 .addValue("email", user.getEmail());
-        if(user.getId() == null) {
+        if (user.getId() == null) {
             Number id = insertUser.executeAndReturnKey(map);
             user.setId(id.longValue());
             return user;
-        }
-        else if(namedParameterJdbcTemplate.update("UPDATE users SET name = :name," +
+        } else if (namedParameterJdbcTemplate.update("UPDATE users SET name = :name," +
                 " lastName = :lastName," +
                 " surname = :surname," +
                 " birthday = :birthday," +

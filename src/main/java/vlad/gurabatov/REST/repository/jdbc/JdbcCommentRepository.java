@@ -1,6 +1,6 @@
 package vlad.gurabatov.REST.repository.jdbc;
 
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,18 +10,27 @@ import org.springframework.stereotype.Repository;
 import vlad.gurabatov.REST.entity.Comment;
 import vlad.gurabatov.REST.repository.CommentRepository;
 
+import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
+@Repository
+@Profile("jdbc")
 public class JdbcCommentRepository implements CommentRepository {
     private final static BeanPropertyRowMapper<Comment> ROW_MAPPER = new BeanPropertyRowMapper<>(Comment.class);
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert simpleJdbcInsert;
 
-    public JdbcCommentRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, SimpleJdbcInsert simpleJdbcInsert) {
+    private final DataSource dataSource;
+
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
+
+    private final SimpleJdbcInsert commentInsert;
+
+    public JdbcCommentRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate, JdbcTemplate jdbcTemplate, DataSource dataSource) {
+        this.dataSource = dataSource;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
         this.jdbcTemplate = jdbcTemplate;
-        this.simpleJdbcInsert = simpleJdbcInsert
+        this.commentInsert = new SimpleJdbcInsert(dataSource)
                 .withTableName("comments")
                 .usingGeneratedKeyColumns("id");
     }
@@ -46,7 +55,7 @@ public class JdbcCommentRepository implements CommentRepository {
                 .addValue("text", comment.getText())
                 .addValue("createDate", comment.getCreateDate());
         if (comment.getId() == 0) {
-            Number id = simpleJdbcInsert.executeAndReturnKey(map);
+            Number id = commentInsert.executeAndReturnKey(map);
             comment.setId(id.longValue());
             return comment;
         } else if (namedParameterJdbcTemplate.update("UPDATE comments SET author = ?," +

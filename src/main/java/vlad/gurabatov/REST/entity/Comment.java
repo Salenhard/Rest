@@ -21,7 +21,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Comment implements Serializable {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private long id;
     @NotBlank(message = "Comment is mandatory")
     @Size(min = 5, max = 500, message = "Comment must be between 5 and 500 characters")

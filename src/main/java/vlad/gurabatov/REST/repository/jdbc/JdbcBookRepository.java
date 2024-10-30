@@ -1,6 +1,5 @@
 package vlad.gurabatov.REST.repository.jdbc;
-
-import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -10,20 +9,32 @@ import org.springframework.stereotype.Repository;
 import vlad.gurabatov.REST.entity.Book;
 import vlad.gurabatov.REST.repository.BookRepository;
 
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
+@Repository
+@Profile("jdbc")
 public class JdbcBookRepository implements BookRepository {
     private final static BeanPropertyRowMapper<Book> ROW_MAPPER = new BeanPropertyRowMapper<>(Book.class);
+
+    private final DataSource dataSource;
+
     private final JdbcTemplate jdbcTemplate;
+
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     private final SimpleJdbcInsert bookInsert;
 
-    public JdbcBookRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, SimpleJdbcInsert bookInsert) {
+    public JdbcBookRepository(DataSource dataSource, JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+        this.dataSource = dataSource;
         this.jdbcTemplate = jdbcTemplate;
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
-        this.bookInsert = bookInsert
-                .withTableName("books")
+        this.bookInsert = new SimpleJdbcInsert(dataSource).withTableName("books")
                 .usingGeneratedKeyColumns("id");
     }
 
@@ -45,8 +56,10 @@ public class JdbcBookRepository implements BookRepository {
                 .addValue("name", book.getName())
                 .addValue("author", userId)
                 .addValue("description", book.getDescription())
-                .addValue("genres", book.getGenres());
-        if (book.getId() == 0) {
+                .addValue("genres", book.getGenres().stream()
+                        .map(String::valueOf)
+                        .collect(Collectors.joining(",")));
+        if (book.getId() == null) {
             Number id = bookInsert.executeAndReturnKey(map);
             book.setId(id.longValue());
             return book;
