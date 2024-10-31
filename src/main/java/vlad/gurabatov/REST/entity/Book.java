@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.ToString;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.List;
 @Table(name = "books")
 @NoArgsConstructor
 @Data
+@ToString(exclude = "comments")
 public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -43,15 +45,5 @@ public class Book implements Serializable {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "Book{" +
-                "author=" + author +
-                ", genres=" + genres +
-                ", description='" + description + '\'' +
-                ", name='" + name + '\'' +
-                ", id=" + id +
-                '}';
-    }
 }
 

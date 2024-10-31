@@ -27,11 +27,9 @@ public class Comment implements Serializable {
     private LocalDate createDate = LocalDate.now();
     @ManyToOne
     @NotNull(message = "Book is mandatory")
-    @JoinColumn(name = "book_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Book book;
     @ManyToOne
-    @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.SET_NULL)
     private User author;
 }

@@ -7,6 +7,5 @@ import vlad.gurabatov.REST.entity.Comment;
 @Repository
 @Primary
 public interface CrudCommentRepository extends JpaRepository<Comment, Long> {
-
     void deleteByIdAndAuthor_Id(long id, long userId);
 }

@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -17,6 +18,7 @@ import java.util.List;
 @Data
 @Table(name = "users")
 @NoArgsConstructor
+@ToString(exclude = { "comments", "books" })
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -32,14 +34,14 @@ public class User implements Serializable {
     private String lastName;
     @NotNull(message = "birthday is mandatory")
     private LocalDate birthday;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Book> books;
     @Email(message = "Email must be valid")
     @NotBlank(message = "Email is mandatory")
     private String email;
     @JsonIgnore
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", fetch = FetchType.LAZY)
     private List<Comment> comments;
 
     public User(String name, String surname, String lastName, LocalDate birthday, String email) {
@@ -52,17 +54,5 @@ public class User implements Serializable {
 
     public int getAge() {
         return LocalDate.now().getYear() - birthday.getYear();
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "lastName='" + lastName + '\'' +
-                ", id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", birthday=" + birthday +
-                ", email='" + email + '\'' +
-                '}';
     }
 }
